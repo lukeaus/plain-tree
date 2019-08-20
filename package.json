@@ -1,0 +1,71 @@
+{
+  "name": "plain-tree",
+  "description": "A plain tree with a bunch of tree tools",
+  "version": "0.0.0",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/index.umd.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "dev": "microbundle watch",
+    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "commit": "git-cz",
+    "prebuild": "rimraf dist",
+    "build": "microbundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeaus/plain-tree.git"
+  },
+  "keywords": [
+    "tree",
+    "trees",
+    "tool",
+    "tools",
+    "node",
+    "nodes"
+  ],
+  "author": {
+    "name": "Luke Scott",
+    "email": "luke.m.scott@gmail.com",
+    "url": "https://lukescott.co"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukeaus/plain-tree/issues"
+  },
+  "homepage": "https://github.com/lukeaus/plain-tree#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "24.0.17",
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
+    "commitizen": "4.0.3",
+    "cz-conventional-changelog": "3.0.2",
+    "eslint": "6.2.0",
+    "eslint-config-prettier": "6.1.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "husky": "3.0.4",
+    "jest": "24.9.0",
+    "microbundle": "0.11.0",
+    "prettier": "1.18.2",
+    "pretty-quick": "1.11.1",
+    "rimraf": "3.0.0",
+    "semantic-release": "15.13.21",
+    "travis-deploy-once": "5.0.11",
+    "ts-jest": "24.0.2",
+    "typescript": "3.5.3"
+  },
+  "dependencies": {}
+}

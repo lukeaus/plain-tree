@@ -1,0 +1,29 @@
+language: node_js
+cache:
+  directories:
+    - ~/.npm
+notifications:
+  email: true
+node_js:
+  - '12'
+  - '10'
+  - '8'
+  - '6'
+install: npm install
+jobs:
+  include:
+    - stage: test
+      script:
+        - npm run lint
+        - npm run test
+    - stage: build
+      language: node_js
+      node_js: '10'
+      script:
+        - npm run build
+    - stage: publish
+      skip_cleanup: true
+      language: node_js
+      node_js: '10'
+      if: branch = master
+      script: npm run travis-deploy-once "npx semantic-release"
