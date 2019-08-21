@@ -1,10 +1,12 @@
-import { Node, nodeData, hasChildren } from './index';
+import { Node, nodeData, hasChildren, firstArrayElement } from './index';
 import { NodeOrNull } from './types';
 
-type TraverseReturn = void | boolean;
+type TraverseReturn = void | boolean | Array<NodeOrNull>;
 type TraverseOptions = {
-  forSome?: boolean;
-  forEvery?: boolean;
+  some?: boolean;
+  every?: boolean;
+  returnBoolean?: boolean;
+  returnArray?: boolean;
 };
 
 class Tree {
@@ -14,18 +16,28 @@ class Tree {
 
   private _traverse(
     fn: Function,
-    { forSome, forEvery }: TraverseOptions = {},
+    { some, every, returnBoolean, returnArray }: TraverseOptions = {},
     queueMethod: string
   ): TraverseReturn {
+    if (returnArray && !(some || every)) {
+      throw new Error('returnArray requires option "some" or "every"');
+    }
+    if (returnArray && returnBoolean) {
+      throw new Error("Can't return both an Array and Boolean");
+    }
     const queue = [this.root];
+    const results: Array<NodeOrNull> = [];
     let didBreak = false;
     let lastResult: undefined | boolean;
     while (queue.length) {
       const node = queue.shift();
       hasChildren(node) && queue[queueMethod](...node.children);
-      if (forSome || forEvery) {
+      if (some || every) {
         const result = fn(node);
-        if ((forEvery && !result) || (forSome && result)) {
+        if (result && returnArray) {
+          results.push(node);
+        }
+        if ((every && !result) || (some && result)) {
           didBreak = true;
           lastResult = result;
           break;
@@ -34,10 +46,18 @@ class Tree {
         fn(node);
       }
     }
-    if (forEvery) {
-      return !didBreak;
-    } else if (forSome) {
-      return Boolean(lastResult);
+    if (every) {
+      if (returnBoolean) {
+        return !didBreak;
+      } else if (returnArray) {
+        return results;
+      }
+    } else if (some) {
+      if (returnBoolean) {
+        return Boolean(lastResult);
+      } else if (returnArray) {
+        return results;
+      }
     }
   }
 
@@ -74,7 +94,8 @@ class Tree {
   someBreathFirst(fn: Function): boolean {
     return Boolean(
       this._traverseBreathFirst(fn, {
-        forSome: true
+        some: true,
+        returnBoolean: true
       })
     );
   }
@@ -86,7 +107,8 @@ class Tree {
   someDepthFirst(fn: Function): boolean {
     return Boolean(
       this._traverseDepthFirst(fn, {
-        forSome: true
+        some: true,
+        returnBoolean: true
       })
     );
   }
@@ -98,7 +120,8 @@ class Tree {
   everyBreathFirst(fn: Function): boolean {
     return Boolean(
       this._traverseDepthFirst(fn, {
-        forEvery: true
+        every: true,
+        returnBoolean: true
       })
     );
   }
@@ -108,7 +131,41 @@ class Tree {
    * exit early on first function falsey value
    */
   everyDepthFirst(fn: Function): boolean {
-    return Boolean(this._traverseDepthFirst(fn, { forEvery: true }));
+    return Boolean(
+      this._traverseDepthFirst(fn, { every: true, returnBoolean: true })
+    );
+  }
+
+  findOneBreathFirst(fn: Function): NodeOrNull {
+    const result = this._traverseBreathFirst(fn, {
+      some: true,
+      returnArray: true
+    });
+    return firstArrayElement(result);
+  }
+
+  findOneDepthFirst(fn: Function): NodeOrNull {
+    const result = this._traverseDepthFirst(fn, {
+      some: true,
+      returnArray: true
+    });
+    return firstArrayElement(result);
+  }
+
+  findAllBreathFirst(fn: Function): Array<NodeOrNull> {
+    const result = this._traverseBreathFirst(fn, {
+      every: true,
+      returnArray: true
+    });
+    return Array.isArray(result) ? result : [];
+  }
+
+  findAllDepthFirst(fn: Function): Array<NodeOrNull> {
+    const result = this._traverseDepthFirst(fn, {
+      every: true,
+      returnArray: true
+    });
+    return Array.isArray(result) ? result : [];
   }
 
   flatten(fn: Function | null = null): Array<any> {

@@ -92,6 +92,62 @@ Type: Function
 | --------- | ------------ | -------------- |
 | 1         | Node \| null | A Node or null |
 
+#### `findOneBreathFirst(fn)`
+
+Traverse nodes in the tree breath first. Returns the first matching Node or null.
+
+Return: Node | null
+
+##### fn
+
+Type: Function
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
+#### `findOneDepthFirst(fn)`
+
+Traverse nodes in the tree depth first. Returns the first matching Node or null.
+
+Return: Node | null
+
+##### fn
+
+Type: Function
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
+#### `findAllBreathFirst(fn)`
+
+Traverse nodes in the tree breath first. Returns an array containing all matching Nodes.
+
+Return: Array<Node>
+
+##### fn
+
+Type: Function
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
+#### `findAllDepthFirst(fn)`
+
+Traverse nodes in the tree depth first. Returns an array containing all matching Nodes.
+
+Return: Array<Node>
+
+##### fn
+
+Type: Function
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
 #### `someBreathFirst(fn)`
 
 Traverse nodes in the tree breath first. Return true if a single node is truthy for fn, else return false. Breaks on first truthy for performance.

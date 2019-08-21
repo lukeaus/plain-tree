@@ -27,3 +27,7 @@ const generateChars = (num: number): string => {
 export const generateId = (): string => {
   return generateChars(36);
 };
+
+export const firstArrayElement = (arr: any): any => {
+  return Array.isArray(arr) && arr.length ? arr[0] : null;
+};

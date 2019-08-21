@@ -317,6 +317,212 @@ describe('Tree', () => {
       });
     });
   });
+  describe('findOneBreathFirst', () => {
+    describe('returns one node', () => {
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findOneBreathFirst((node: Node) => nodeData(node) === 'x')
+        ).toBe(root);
+      });
+      test('3 nodes', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        expect(
+          tree.findOneBreathFirst((node: Node) =>
+            ['x', 'y', 'z'].includes(nodeData(node))
+          )
+        ).toEqual(root);
+      });
+      test('3 nodes fn called correct number of times', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        const _fn = (node: Node): boolean =>
+          ['x', 'y', 'z'].includes(nodeData(node));
+        const fn = jest.fn(_fn);
+        expect(tree.findOneBreathFirst(fn)).toEqual(root);
+        expect(fn.mock.calls.length).toBe(1);
+      });
+    });
+    describe('returns null', () => {
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findOneBreathFirst((node: Node) => nodeData(node) === 'a')
+        ).toBe(null);
+      });
+      test('3 nodes', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        expect(
+          tree.findOneBreathFirst((node: Node) => nodeData(node) === 'x')
+        ).toBe(root);
+      });
+      test('breaks early', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        const fn = jest.fn();
+        expect(tree.findOneBreathFirst(fn)).toBe(null);
+        expect(fn.mock.calls.length).toBe(2);
+      });
+    });
+  });
+  describe('findOneDepthFirst', () => {
+    describe('returns one node', () => {
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findOneDepthFirst((node: Node) => nodeData(node) === 'x')
+        ).toBe(root);
+      });
+      test('3 nodes', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        expect(
+          tree.findOneDepthFirst((node: Node) =>
+            ['x', 'y', 'z'].includes(nodeData(node))
+          )
+        ).toEqual(root);
+      });
+      test('3 nodes fn called correct number of times', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        const _fn = (node: Node): boolean =>
+          ['x', 'y', 'z'].includes(nodeData(node));
+        const fn = jest.fn(_fn);
+        expect(tree.findOneDepthFirst(fn)).toEqual(root);
+        expect(fn.mock.calls.length).toBe(1);
+      });
+    });
+    describe('returns null', () => {
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findOneDepthFirst((node: Node) => nodeData(node) === 'a')
+        ).toBe(null);
+      });
+      test('3 nodes', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        root.addChild('z');
+        expect(
+          tree.findOneDepthFirst((node: Node) => nodeData(node) === 'x')
+        ).toBe(root);
+      });
+      test('breaks early', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        root.addChild('y');
+        const fn = jest.fn();
+        expect(tree.findOneDepthFirst(fn)).toBe(null);
+        expect(fn.mock.calls.length).toBe(2);
+      });
+    });
+  });
+  describe('findAllBreathFirst', () => {
+    describe('returns array with nodes', () => {
+      test('1 node null', () => {
+        const tree = new Tree();
+        expect(tree.findAllBreathFirst((node: Node) => node === null)).toEqual([
+          null
+        ]);
+      });
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findAllBreathFirst((node: Node) => nodeData(node) === 'x')
+        ).toEqual([root]);
+      });
+      test('3 nodes', () => {
+        const root = new Node('a');
+        const tree = new Tree(root);
+        const nodeB = root.addChild('b');
+        const nodeC = root.addChild('c');
+        const nodeD = nodeB.addChild('d');
+        expect(
+          tree.findAllBreathFirst((node: Node) =>
+            ['a', 'b', 'c', 'd'].includes(nodeData(node))
+          )
+        ).toStrictEqual([root, nodeB, nodeC, nodeD]);
+      });
+    });
+    describe('returns empty array', () => {
+      test('1 node null', () => {
+        const tree = new Tree();
+        expect(
+          tree.findAllBreathFirst((node: Node) => nodeData(node) === 'x')
+        ).toEqual([]);
+      });
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findAllBreathFirst((node: Node) => nodeData(node) === 'a')
+        ).toEqual([]);
+      });
+    });
+  });
+  describe('findAllDepthFirst', () => {
+    describe('returns array with nodes', () => {
+      test('1 node null', () => {
+        const tree = new Tree();
+        expect(tree.findAllDepthFirst((node: Node) => node === null)).toEqual([
+          null
+        ]);
+      });
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findAllDepthFirst((node: Node) => nodeData(node) === 'x')
+        ).toEqual([root]);
+      });
+      test('3 nodes', () => {
+        const root = new Node('a');
+        const tree = new Tree(root);
+        const nodeB = root.addChild('b');
+        const nodeC = root.addChild('c');
+        const nodeD = nodeB.addChild('d');
+        expect(
+          tree.findAllDepthFirst((node: Node) =>
+            ['a', 'b', 'c', 'd'].includes(nodeData(node))
+          )
+        ).toStrictEqual([root, nodeB, nodeD, nodeC]);
+      });
+    });
+    describe('returns empty array', () => {
+      test('1 node null', () => {
+        const tree = new Tree();
+        expect(
+          tree.findAllDepthFirst((node: Node) => nodeData(node) === 'x')
+        ).toEqual([]);
+      });
+      test('1 node', () => {
+        const root = new Node('x');
+        const tree = new Tree(root);
+        expect(
+          tree.findAllDepthFirst((node: Node) => nodeData(node) === 'a')
+        ).toEqual([]);
+      });
+    });
+  });
   describe('widthsByHeight', () => {
     test('is a function', () => {
       const root = new Node('x');
