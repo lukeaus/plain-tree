@@ -214,7 +214,7 @@ Return: Array<Node|null>
 
 Type: Function
 
-Default: null (if null, will push the node into the array)
+Default: null (if null, flatten will push the node into the array)
 
 | Parameter | Type         | Description    |
 | --------- | ------------ | -------------- |
@@ -222,7 +222,7 @@ Default: null (if null, will push the node into the array)
 
 #### `flattenData()`
 
-Traverse every node in the tree breath first and flatten the tree into a single array. Add the 'data' property of each Node (if node is not null) and return an array of any.
+Traverse every node in the tree breath first and flatten the tree into a single array. Add the 'data' property of each Node (if node is not null) and return an array of any. This is a helper method which is essentially `flatten(nodeData)`;
 
 Return: Array<any>
 
