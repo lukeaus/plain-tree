@@ -24,4 +24,4 @@ jobs:
         - npm run build
       on:
         branch: release
-      script: npx semantic-release
+      script: npx semantic-release@15
