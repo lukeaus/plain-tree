@@ -9,6 +9,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "build",
+    "README.md"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
