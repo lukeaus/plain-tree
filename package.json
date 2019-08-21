@@ -3,9 +3,9 @@
   "description": "A plain tree with a bunch of tree tools",
   "version": "0.0.0",
   "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "unpkg": "dist/index.umd.js",
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "unpkg": "build/index.umd.js",
   "publishConfig": {
     "access": "public"
   },
@@ -15,7 +15,7 @@
     "dev": "microbundle watch",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "commit": "git-cz",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf build",
     "build": "microbundle"
   },
   "repository": {
