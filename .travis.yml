@@ -3,14 +3,18 @@ cache:
   directories:
     - ~/.npm
 notifications:
-  email: false
+  email: true
 node_js:
   - '12'
   - '10'
   - '8'
-install:
-  - npm install
-script:
-  - npm run build
-after_success:
-  - npx travis-deploy-once "npx semantic-release"
+install: npm install
+jobs:
+  include:
+    - stage: test
+      script:
+        - npm run lint
+        - npm run test
+    - stage: deploy
+      if: branch = master
+      script: npx travis-deploy-once "npx semantic-release"
