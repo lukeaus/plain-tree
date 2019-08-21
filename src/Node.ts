@@ -1,4 +1,4 @@
-import { generateId, nodeData } from './utils';
+import { generateId } from './utils';
 
 class Node {
   data: Record<string, any>;
@@ -22,16 +22,30 @@ class Node {
     return node;
   }
 
-  removeChildren(fn: Function): void {
-    this.children = this.children.filter(node => !fn(node));
+  private _removeChildren(fn: Function): Array<Node> {
+    const removedChildren: Array<Node> = [];
+    this.children = this.children.filter(node => {
+      if (fn(node)) {
+        removedChildren.push(node);
+        return false;
+      }
+      return true;
+    });
+    return removedChildren;
   }
 
-  removeChildrenByData(data: any): void {
-    this.children = this.children.filter(node => nodeData(node) != data);
+  removeChildren(fn: Function): Array<Node> {
+    return this._removeChildren(fn);
   }
 
-  removeChildrenById(id: string): void {
-    this.children = this.children.filter(node => node && node.id != id);
+  removeChildrenByData(data: any): Array<Node> {
+    const fn: Function = (node: Node) => node.data === data;
+    return this._removeChildren(fn);
+  }
+
+  removeChildrenById(id: string): Array<Node> {
+    const fn: Function = (node: Node) => node.id === id;
+    return this._removeChildren(fn);
   }
 
   isLeaf(): boolean {

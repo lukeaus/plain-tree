@@ -245,9 +245,9 @@ Type: any
 
 #### `removeChildren(fn)`
 
-Remove all children where fn returns truthy. Use this where data is complex (e.g. data is an Object or Array)
+Remove all children where fn returns truthy. Use this where data is complex (e.g. data is an Object or Array). Returns removed children.
 
-Return: void
+Return: Array<Node>
 
 ##### fn
 
@@ -257,9 +257,9 @@ Return: void
 
 #### `removeChildrenByData(data)`
 
-Remove all children where child's `data` property matches data. Use `removeChildren` where data is complex (e.g. data is an Object or Array).
+Remove all children where child's `data` property matches data. Use `removeChildren` where data is complex (e.g. data is an Object or Array). Returns removed children.
 
-Return: void
+Return: Array<Node>
 
 ##### data
 
@@ -267,9 +267,9 @@ Type: any
 
 #### `removeChildrenById(id)`
 
-Remove all children where child's `id` property matches id. Use `removeChildren` where data is complex (e.g. data is an Object or Array).
+Remove all children where child's `id` property matches id. Use `removeChildren` where data is complex (e.g. data is an Object or Array). Returns removed children.
 
-Return: void
+Return: Array<Node>
 
 ##### id
 
