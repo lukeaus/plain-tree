@@ -15,6 +15,7 @@ jobs:
       script:
         - npm run lint
         - npm run test
-    - stage: deploy
+    - stage: release
+      node_js: '10'
       if: branch = master
       script: npx travis-deploy-once "npx semantic-release"
