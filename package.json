@@ -1,5 +1,5 @@
 {
-  "name": "plain-tree",
+  "name": "@lukeaus/plain-tree",
   "description": "A plain tree with a bunch of tree tools",
   "version": "0.0.0",
   "source": "src/index.ts",

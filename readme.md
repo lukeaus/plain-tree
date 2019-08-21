@@ -21,7 +21,7 @@ Tree tools all in one handy repo
 ## Install
 
 ```
-npm i -S plain-tree
+npm i -S @lukeaus/plain-tree
 ```
 
 ## Usage
