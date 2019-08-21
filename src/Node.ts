@@ -1,7 +1,7 @@
 import { generateId } from './utils';
 
 class Node {
-  data: Record<string, any>;
+  data: any;
   children: Node[] = [];
   id: string;
   parentId: string;
