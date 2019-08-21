@@ -6,7 +6,7 @@
 
 [![Tests](https://img.shields.io/travis/lukeaus/plain-tree/master.svg)](https://travis-ci.org/lukeaus/plain-tree)
 [![MIT License](https://img.shields.io/github/license/lukeaus/plain-tree.svg)](https://img.shields.io/github/license/lukeaus/plain-tree.svg)
-[![version](https://img.shields.io/npm/v/plain-tree.svg)](http://npm.im/@lukeaus/plain-tree)
+[![version](https://img.shields.io/npm/v/plain-tree.svg)](https://www.npmjs.com/lukeaus/plain-tree)
 [![downloads](https://img.shields.io/npm/dm/@lukeaus/plain-tree.svg)](http://npm-stat.com/charts.html?package=@lukeaus/plain-tree&from=2019-08-20)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
