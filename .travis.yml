@@ -8,7 +8,6 @@ node_js:
   - '12'
   - '10'
   - '8'
-  - '6'
 install: npm install
 jobs:
   include:
@@ -26,4 +25,4 @@ jobs:
       language: node_js
       node_js: '10'
       if: branch = master
-      script: npm run travis-deploy-once "npx semantic-release"
+      script: npx travis-deploy-once "npx semantic-release"
