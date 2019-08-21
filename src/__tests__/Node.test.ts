@@ -52,8 +52,24 @@ describe('Node', () => {
   });
   describe('isLeaf', () => {
     test('no children', () => {
-      const node = new Node('');
+      const node = new Node('a');
+      expect(node.isLeaf()).toBe(true);
+    });
+    test('1 child', () => {
+      const node = new Node('a');
+      node.addChild('b');
       expect(node.isLeaf()).toBe(false);
+    });
+  });
+  describe('hasChildren', () => {
+    test('no children', () => {
+      const node = new Node('a');
+      expect(node.hasChildren()).toBe(false);
+    });
+    test('1 child', () => {
+      const node = new Node('a');
+      node.addChild('b');
+      expect(node.hasChildren()).toBe(true);
     });
   });
 });

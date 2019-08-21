@@ -35,6 +35,10 @@ class Node {
   }
 
   isLeaf(): boolean {
+    return !Boolean(this.children.length);
+  }
+
+  hasChildren(): boolean {
     return Boolean(this.children.length);
   }
 }

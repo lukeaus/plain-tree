@@ -277,6 +277,12 @@ Returns a Boolean. False if this Node instance has children. True if it does hav
 
 Return: Boolean
 
+#### `hasChildren()`
+
+Returns a Boolean. True if this Node instance has children. False if it does have children.
+
+Return: Boolean
+
 ### Utils
 
 #### `nodeData(node)`
