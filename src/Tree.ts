@@ -56,7 +56,7 @@ class Tree {
   }
 
   traverseBreathFirst(fn: Function): TraverseReturn {
-    return this._traverseBreathFirst(fn);
+    this._traverseBreathFirst(fn);
   }
 
   /*
@@ -64,7 +64,7 @@ class Tree {
    * Then go up and get parent's children, then go down again
    */
   traverseDepthFirst(fn: Function): TraverseReturn {
-    return this._traverseDepthFirst(fn);
+    this._traverseDepthFirst(fn);
   }
 
   /*
