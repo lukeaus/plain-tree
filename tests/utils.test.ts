@@ -1,4 +1,4 @@
-import { generateId } from '../utils';
+import { generateId } from '../src/utils';
 
 describe('generateId', () => {
   test('returns a string 36 characters long', () => {

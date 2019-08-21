@@ -19,7 +19,7 @@
     "dev": "microbundle watch",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "commit": "git-cz",
-    "prebuild": "rimraf build",
+    "prebuild": "rimraf build & rimraf .rts2_*",
     "build": "microbundle"
   },
   "repository": {

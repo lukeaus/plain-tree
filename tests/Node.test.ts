@@ -1,5 +1,4 @@
-import Node from '../Node';
-import { nodeData } from '../utils';
+import { Node, nodeData } from '../src/index';
 
 describe('Node', () => {
   describe('data', () => {
