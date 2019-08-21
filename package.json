@@ -65,8 +65,6 @@
     "prettier": "1.18.2",
     "pretty-quick": "1.11.1",
     "rimraf": "3.0.0",
-    "semantic-release": "15.13.21",
-    "travis-deploy-once": "5.0.11",
     "ts-jest": "24.0.2",
     "typescript": "3.5.3"
   },
