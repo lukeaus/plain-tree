@@ -1,5 +1,5 @@
 import { Tree, Node, nodesData, nodeData } from '../src';
-import { NodeOrNull } from '../src/Types';
+import { NodeOrNull } from '../src/types';
 
 describe('Tree', () => {
   describe('root', () => {
