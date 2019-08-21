@@ -27,7 +27,7 @@ npm i -S @lukeaus/plain-tree
 ## Usage
 
 ```javascript
-import { Node, Tree } from 'plain-tree';
+import { Node, Tree } from '@lukeaus/plain-tree';
 
 const nodeA = new Node('a');
 const tree = new Tree(node);
@@ -168,12 +168,12 @@ Return: Array<any>
 
 #### `widthsByHeight()`
 
-Return the width at each depth
+Return the width at each height
 
 ##### Example
 
 ```javascript
-import { Tree, Node, hasChildren, nodeData } from 'plain-tree';
+import { Tree, Node, hasChildren, nodeData } from '@lukeaus/plain-tree';
 
 const nodeA = new Node('a');
 const tree = new Tree(nodeA);
