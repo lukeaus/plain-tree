@@ -49,7 +49,7 @@ class Node {
   }
 
   isLeaf(): boolean {
-    return !Boolean(this.children.length);
+    return this.parentId !== null && !Boolean(this.children.length);
   }
 
   hasChildren(): boolean {

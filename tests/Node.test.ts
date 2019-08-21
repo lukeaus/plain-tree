@@ -36,7 +36,7 @@ describe('Node', () => {
       node.removeChildrenByData('b');
       expect(node.children.length).toEqual(0);
     });
-    test.only('returns removed children', () => {
+    test('returns removed children', () => {
       const node = new Node('a');
       node.addChild('b');
       node.addChild('b');
@@ -57,7 +57,7 @@ describe('Node', () => {
       node.removeChildrenById(nodeB.id);
       expect(node.children.length).toEqual(0);
     });
-    test.only('returns removed children', () => {
+    test('returns removed children', () => {
       const node = new Node('a');
       const nodeB = node.addChild('b');
       node.addChild('b');
@@ -94,9 +94,19 @@ describe('Node', () => {
     });
   });
   describe('isLeaf', () => {
-    test('no children', () => {
+    test('leaf no children', () => {
       const node = new Node('a');
-      expect(node.isLeaf()).toBe(true);
+      const nodeB = node.addChild('b');
+      expect(nodeB.isLeaf()).toBe(true);
+    });
+    test('root no children', () => {
+      const node = new Node('a');
+      expect(node.isLeaf()).toBe(false);
+    });
+    test('root 1 child', () => {
+      const node = new Node('a');
+      node.addChild('b');
+      expect(node.isLeaf()).toBe(false);
     });
     test('1 child', () => {
       const node = new Node('a');
