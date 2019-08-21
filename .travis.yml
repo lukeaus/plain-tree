@@ -15,7 +15,13 @@ jobs:
       script:
         - npm run lint
         - npm run test
+    - stage: build
+      node_js: '10'
+      script:
+        - npm run build
     - stage: release
       node_js: '10'
-      if: branch = master
+      skip_cleanup: true
+      on:
+        branch: release
       script: npx travis-deploy-once "npx semantic-release"
