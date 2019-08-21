@@ -19,12 +19,6 @@ class Tree {
     { some, every, returnBoolean, returnArray }: TraverseOptions = {},
     queueMethod: string
   ): TraverseReturn {
-    if (returnArray && !(some || every)) {
-      throw new Error('returnArray requires option "some" or "every"');
-    }
-    if (returnArray && returnBoolean) {
-      throw new Error("Can't return both an Array and Boolean");
-    }
     const queue = [this.root];
     const results: Array<NodeOrNull> = [];
     let didBreak = false;
