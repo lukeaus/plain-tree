@@ -4,6 +4,8 @@
 
 <img src="assets/plain-tree.png" title="Plain Tree" alt="Plain Tree logo" width="200">
 
+---
+
 [![Tests](https://img.shields.io/travis/lukeaus/plain-tree/master.svg)](https://travis-ci.org/lukeaus/plain-tree)
 [![MIT License](https://img.shields.io/github/license/lukeaus/plain-tree.svg)](https://img.shields.io/github/license/lukeaus/plain-tree.svg)
 [![version](https://img.shields.io/npm/v/@lukeaus/plain-tree.svg)](https://www.npmjs.com/@lukeaus/plain-tree)
