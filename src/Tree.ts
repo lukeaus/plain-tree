@@ -174,6 +174,34 @@ class Tree {
     return this.flatten(nodeData);
   }
 
+  flattenByLevel(fn: Function | null = null): NodeOrNull[][] {
+    const queue1 = [this.root];
+    const queue2: NodeOrNull[] = [];
+    let currentQueue = queue1;
+    const result = [[fn(this.root)]];
+    let nextQueue = queue2;
+    do {
+      while (currentQueue.length) {
+        const node = currentQueue.pop();
+        hasChildren(node) && nextQueue.push(...node.children);
+      }
+      if (nextQueue.length) {
+        // explicit argument passing to fn to placate TypeScript
+        if (fn) {
+          result[result.length] = nextQueue.map(node => fn(node));
+        } else {
+          result[result.length] = nextQueue;
+        }
+      }
+      [nextQueue, currentQueue] = [currentQueue, nextQueue];
+    } while (currentQueue.length);
+    return result;
+  }
+
+  flattenDataByLevel(): NodeOrNull[][] {
+    return this.flattenByLevel(nodeData);
+  }
+
   /*
    * Get the width of each level of the tree from top to bottom
    */

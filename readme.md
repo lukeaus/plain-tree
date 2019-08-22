@@ -222,9 +222,48 @@ Default: null (if null, flatten will push the node into the array)
 
 #### `flattenData()`
 
-Traverse every node in the tree breath first and flatten the tree into a single array. Add the 'data' property of each Node (if node is not null) and return an array of any. This is a helper method which is essentially `flatten(nodeData)`;
+Traverse every node in the tree breath first and flatten the tree into a single array. Extract the 'data' property of each Node (if node is not null) and return an array of any. This is a helper method which is essentially `flatten(nodeData)`;
 
 Return: Array<any>
+
+#### `flattenByLevel(fn?)`
+
+Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each level in the tree.
+
+Return: Array<Array<Node|null>>
+
+##### fn
+
+Type: Function
+
+Default: null (if null, flatten will push the node into the array)
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
+##### Example
+
+```javascript
+import { Node, Tree } from '@lukeaus/plain-tree';
+
+const nodeA = new Node('a');
+const tree = new Tree(nodeA);
+nodeA.addChild('b');
+const nodeC = nodeA.addChild('c');
+nodeC.addChild('d');
+
+tree.flattenByLevel(nodeData)
+/* Output
+[['a'], ['b', 'c'], ['d']];
+*.
+```
+
+#### `flattenDataByLevel(fn?)`
+
+Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each level in the tree. Extract the 'data' property of each Node (if node is not null). This is a helper method which is essentially `flattenByLevel(nodeData)`;
+
+Return: Array<Array<Node|null>>
 
 #### `widthsByHeight()`
 

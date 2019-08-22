@@ -51,6 +51,44 @@ describe('Tree', () => {
       expect(tree.flatten(nodeData)).toEqual([1, 2, 3, 4]);
     });
   });
+  describe('flattenByLevel', () => {
+    test('root is null', () => {
+      const tree = new Tree();
+      expect(tree.flattenByLevel(nodeData)).toEqual([[null]]);
+    });
+    test('root is not null', () => {
+      const node = new Node('a');
+      const tree = new Tree(node);
+      expect(tree.flattenByLevel(nodeData)).toEqual([['a']]);
+    });
+    test('it works', () => {
+      const nodeA = new Node('a');
+      const tree = new Tree(nodeA);
+      nodeA.addChild('b');
+      const nodeC = nodeA.addChild('c');
+      nodeC.addChild('d');
+      expect(tree.flattenByLevel(nodeData)).toEqual([['a'], ['b', 'c'], ['d']]);
+    });
+  });
+  describe('flattenDataByLevel', () => {
+    test('root is null', () => {
+      const tree = new Tree();
+      expect(tree.flattenDataByLevel()).toEqual([[null]]);
+    });
+    test('root is not null', () => {
+      const node = new Node('a');
+      const tree = new Tree(node);
+      expect(tree.flattenDataByLevel()).toEqual([['a']]);
+    });
+    test('it works', () => {
+      const nodeA = new Node('a');
+      const tree = new Tree(nodeA);
+      nodeA.addChild('b');
+      const nodeC = nodeA.addChild('c');
+      nodeC.addChild('d');
+      expect(tree.flattenDataByLevel()).toEqual([['a'], ['b', 'c'], ['d']]);
+    });
+  });
   describe('flattenData', () => {
     test('it works', () => {
       const tree = new Tree();
