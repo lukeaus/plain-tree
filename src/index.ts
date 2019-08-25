@@ -3,3 +3,4 @@ import Node from './Node';
 
 export { Node, Tree };
 export * from './utils';
+export * from './create';

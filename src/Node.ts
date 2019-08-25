@@ -1,23 +1,24 @@
-import { generateId } from './utils';
+import { generateId, nodeToJsonFormatter, widthsByHeight } from './utils';
+import { NodeOrNull } from './types';
 
 class Node {
   data: any;
   children: Node[] = [];
   id: string;
-  parentId: string;
+  parent: NodeOrNull;
 
   constructor(
     data: any,
-    { id, parentId }: { id?: string; parentId?: string } = {}
+    { id, parent }: { id?: string; parent?: NodeOrNull } = {}
   ) {
     this.id = id !== undefined ? id : generateId();
-    this.parentId = parentId !== undefined ? parentId : null;
+    this.parent = parent || null;
     this.data = data;
     this.children = [];
   }
 
-  addChild(data: any): Node {
-    const node = new Node(data, { parentId: this.id });
+  addChild(data: any, { id }: { id?: string } = {}): Node {
+    const node = new Node(data, { id, parent: this });
     this.children.push(node);
     return node;
   }
@@ -49,11 +50,39 @@ class Node {
   }
 
   isLeaf(): boolean {
-    return this.parentId !== null && !Boolean(this.children.length);
+    return this.parent !== null && !Boolean(this.children.length);
   }
 
   hasChildren(): boolean {
     return Boolean(this.children.length);
+  }
+
+  toJson(): string {
+    const objectToSerialize = nodeToJsonFormatter(this);
+    return JSON.stringify(objectToSerialize);
+  }
+
+  depth(): number {
+    if (!this.parent) {
+      return 0;
+    } else {
+      let depth = 0;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      let currentNode: Node = this;
+      while (currentNode.parent) {
+        depth += 1;
+        currentNode = currentNode.parent;
+      }
+      return depth;
+    }
+  }
+
+  widthsByHeight(): Array<number> {
+    return widthsByHeight(this);
+  }
+
+  height(): number {
+    return this.widthsByHeight().length - 1;
   }
 }
 

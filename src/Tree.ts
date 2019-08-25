@@ -1,4 +1,10 @@
-import { Node, nodeData, hasChildren, firstArrayElement } from './index';
+import Node from './Node';
+import {
+  nodeData,
+  hasChildren,
+  firstArrayElement,
+  widthsByHeight
+} from './utils';
 import { NodeOrNull } from './types';
 
 type TraverseReturn = void | boolean | Array<NodeOrNull>;
@@ -162,7 +168,7 @@ class Tree {
     return Array.isArray(result) ? result : [];
   }
 
-  flatten(fn: Function | null = null): Array<any> {
+  flatMap(fn: Function | null = null): Array<any> {
     const acc: Array<any> = [];
     this._traverseBreathFirst((node: Node) => {
       (fn && acc.push(fn(node))) || acc.push(node);
@@ -171,15 +177,13 @@ class Tree {
   }
 
   flattenData(): Array<any> {
-    return this.flatten(nodeData);
+    return this.flatMap(nodeData);
   }
 
-  flattenByLevel(fn: Function | null = null): NodeOrNull[][] {
-    const queue1 = [this.root];
-    const queue2: NodeOrNull[] = [];
-    let currentQueue = queue1;
+  flattenByHeight(fn: Function | null = null): NodeOrNull[][] {
+    let currentQueue = [this.root];
+    let nextQueue: NodeOrNull[] = [];
     const result = [[fn(this.root)]];
-    let nextQueue = queue2;
     do {
       while (currentQueue.length) {
         const node = currentQueue.pop();
@@ -198,44 +202,27 @@ class Tree {
     return result;
   }
 
-  flattenDataByLevel(): NodeOrNull[][] {
-    return this.flattenByLevel(nodeData);
+  flattenDataByHeight(): NodeOrNull[][] {
+    return this.flattenByHeight(nodeData);
   }
 
   /*
-   * Get the width of each level of the tree from top to bottom
+   * Get the width of each height of the tree from top to bottom
    */
   widthsByHeight(): Array<number> {
-    const counter = [1];
-    const queue1 = [this.root];
-    const queue2: NodeOrNull[] = [];
-    let currentQueue = queue1;
-    let nextQueue = queue2;
-    do {
-      while (currentQueue.length) {
-        const node = currentQueue.pop();
-        hasChildren(node) && nextQueue.push(...node.children);
-      }
-      if (nextQueue.length) {
-        counter[counter.length] = nextQueue.length;
-      }
-      [nextQueue, currentQueue] = [currentQueue, nextQueue];
-    } while (currentQueue.length);
-    return counter;
+    return widthsByHeight(this.root);
   }
 
   /*
    * Root has height 0
    */
-  atHeight(height: number): Array<any> {
+  nodesAtHeight(height: number): Array<NodeOrNull> {
     const counter = this.root ? [1] : [];
-    const queue1 = [this.root];
-    let currentQueue = queue1;
+    let currentQueue = [this.root];
     if (counter.length === height) {
       return currentQueue;
     }
-    const queue2: NodeOrNull[] = [];
-    let nextQueue = queue2;
+    let nextQueue: NodeOrNull[] = [];
     do {
       while (currentQueue.length) {
         const node = currentQueue.pop();
@@ -254,13 +241,20 @@ class Tree {
     return [];
   }
 
+  countNodes(): number {
+    return this.widthsByHeight().reduce((acc, curr) => acc + curr, 0);
+  }
+
   maxWidth(): number {
     return Math.max(...this.widthsByHeight());
   }
 
-  // Root has height 0
   height(): number {
-    return this.widthsByHeight().length - 1;
+    return this.root ? this.root.height() : 0;
+  }
+
+  toJson(): string {
+    return this.root ? this.root.toJson() : '';
   }
 }
 

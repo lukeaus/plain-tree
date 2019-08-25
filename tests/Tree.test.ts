@@ -41,25 +41,25 @@ describe('Tree', () => {
       expect(nodesData(values)).toEqual([1, 2, 3, 4]);
     });
   });
-  describe('flatten', () => {
+  describe('flatMap', () => {
     test('it works', () => {
       const tree = new Tree();
       tree.root = new Node(1);
       tree.root.addChild(2);
       tree.root.addChild(3);
       tree.root.children[0].addChild(4);
-      expect(tree.flatten(nodeData)).toEqual([1, 2, 3, 4]);
+      expect(tree.flatMap(nodeData)).toEqual([1, 2, 3, 4]);
     });
   });
-  describe('flattenByLevel', () => {
+  describe('flattenByHeight', () => {
     test('root is null', () => {
       const tree = new Tree();
-      expect(tree.flattenByLevel(nodeData)).toEqual([[null]]);
+      expect(tree.flattenByHeight(nodeData)).toEqual([[null]]);
     });
     test('root is not null', () => {
       const node = new Node('a');
       const tree = new Tree(node);
-      expect(tree.flattenByLevel(nodeData)).toEqual([['a']]);
+      expect(tree.flattenByHeight(nodeData)).toEqual([['a']]);
     });
     test('it works', () => {
       const nodeA = new Node('a');
@@ -67,18 +67,22 @@ describe('Tree', () => {
       nodeA.addChild('b');
       const nodeC = nodeA.addChild('c');
       nodeC.addChild('d');
-      expect(tree.flattenByLevel(nodeData)).toEqual([['a'], ['b', 'c'], ['d']]);
+      expect(tree.flattenByHeight(nodeData)).toEqual([
+        ['a'],
+        ['b', 'c'],
+        ['d']
+      ]);
     });
   });
-  describe('flattenDataByLevel', () => {
+  describe('flattenDataByHeight', () => {
     test('root is null', () => {
       const tree = new Tree();
-      expect(tree.flattenDataByLevel()).toEqual([[null]]);
+      expect(tree.flattenDataByHeight()).toEqual([[null]]);
     });
     test('root is not null', () => {
       const node = new Node('a');
       const tree = new Tree(node);
-      expect(tree.flattenDataByLevel()).toEqual([['a']]);
+      expect(tree.flattenDataByHeight()).toEqual([['a']]);
     });
     test('it works', () => {
       const nodeA = new Node('a');
@@ -86,7 +90,7 @@ describe('Tree', () => {
       nodeA.addChild('b');
       const nodeC = nodeA.addChild('c');
       nodeC.addChild('d');
-      expect(tree.flattenDataByLevel()).toEqual([['a'], ['b', 'c'], ['d']]);
+      expect(tree.flattenDataByHeight()).toEqual([['a'], ['b', 'c'], ['d']]);
     });
   });
   describe('flattenData', () => {
@@ -591,11 +595,10 @@ describe('Tree', () => {
       expect(tree.widthsByHeight()).toEqual([1, 1, 2, 1]);
     });
   });
-
-  describe('atHeight', () => {
+  describe('nodesAtHeight', () => {
     test('root null, height 0', () => {
       const tree = new Tree(null);
-      const result = tree.atHeight(0);
+      const result = tree.nodesAtHeight(0);
       expect(nodesData(result)).toEqual([null]);
     });
     test('height 2', () => {
@@ -605,7 +608,7 @@ describe('Tree', () => {
       root.children[0].addChild(2);
       root.children[0].addChild(3);
       root.children[0].children[0].addChild(4);
-      const result = tree.atHeight(2);
+      const result = tree.nodesAtHeight(2);
       expect(nodesData(result)).toEqual([2, 3]);
     });
     test('height 3', () => {
@@ -615,7 +618,7 @@ describe('Tree', () => {
       root.children[0].addChild(2);
       root.children[0].addChild(3);
       root.children[0].children[0].addChild(4);
-      const result = tree.atHeight(3);
+      const result = tree.nodesAtHeight(3);
       expect(nodesData(result)).toEqual([4]);
     });
     test('height greater than max height', () => {
@@ -626,7 +629,7 @@ describe('Tree', () => {
       root.children[0].addChild(2);
       root.children[0].addChild(3);
       root.children[0].children[0].addChild(4);
-      const result = tree.atHeight(height);
+      const result = tree.nodesAtHeight(height);
       expect(tree.height()).toBeLessThan(height);
       expect(nodesData(result)).toEqual([]);
     });
@@ -659,6 +662,52 @@ describe('Tree', () => {
       root.addChild(1);
       root.children[0].addChild(2);
       expect(tree.height()).toBe(2);
+    });
+  });
+  describe('countNodes', () => {
+    test('root is null', () => {
+      const tree = new Tree();
+      expect(tree.countNodes()).toEqual(1);
+    });
+    test('6 nodes', () => {
+      const root = new Node(0);
+      const tree = new Tree(root);
+      root.addChild(1);
+      root.addChild(2);
+      root.addChild(3);
+      root.children[0].addChild(4);
+      root.children[2].addChild(5);
+      expect(tree.countNodes()).toEqual(6);
+    });
+  });
+  describe('toJson', () => {
+    test('works on a tree with root null', () => {
+      const tree = new Tree(null);
+      expect(tree.toJson()).toBe('');
+    });
+    test('works on a tree with single node', () => {
+      const node = new Node('a', { id: 'id_a' });
+      const tree = new Tree(node);
+      expect(tree.toJson()).toBe(
+        '{"data":"a","children":[],"id":"id_a","parentId":null}'
+      );
+    });
+    test('works on a tree with parent with child', () => {
+      const node = new Node('a', { id: 'id_a' });
+      const tree = new Tree(node);
+      node.addChild('b', { id: 'id_b' });
+      expect(tree.toJson()).toBe(
+        '{"data":"a","children":[{"data":"b","children":[],"id":"id_b","parentId":"id_a"}],"id":"id_a","parentId":null}'
+      );
+    });
+    test('works on a tree with parent with children', () => {
+      const node = new Node('a', { id: 'id_a' });
+      const tree = new Tree(node);
+      node.addChild('b', { id: 'id_b' });
+      node.addChild('c', { id: 'id_c' });
+      expect(tree.toJson()).toBe(
+        '{"data":"a","children":[{"data":"b","children":[],"id":"id_b","parentId":"id_a"},{"data":"c","children":[],"id":"id_c","parentId":"id_a"}],"id":"id_a","parentId":null}'
+      );
     });
   });
 });
