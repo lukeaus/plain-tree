@@ -125,7 +125,7 @@ rootNode.children[0].addChild('c');
 
 #### Create a Tree From a Flat Array of Objects
 
-`createTreeFromFlatArray(arr, ?opts)`
+**`createTreeFromFlatArray(arr, ?opts)`**
 
 Return: Tree instance
 
@@ -192,7 +192,7 @@ createTreeFromFlatArray(arr);
 
 #### Create a Tree From an Array of Nested Objects
 
-`createTreeFromTreeArray(arr, ?opts)`
+**`createTreeFromTreeArray(arr, ?opts)`**
 
 Return: Tree instance
 
