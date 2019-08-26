@@ -123,9 +123,9 @@ rootNode.children[0].addChild('c');
  */
 ```
 
-#### `createTreeFromFlatArray(arr, ?opts)`
+#### Create a Tree From a Flat Array of Objects
 
-Create a tree from a flat array of objects.
+`createTreeFromFlatArray(arr, ?opts)`
 
 Return: Tree instance
 
@@ -190,9 +190,9 @@ createTreeFromFlatArray(arr);
  */
 ```
 
-#### `createTreeFromTreeArray(arr, ?opts)`
+#### Create a Tree From an Array of Nested Objects
 
-Create a tree from an array of nested objects.
+`createTreeFromTreeArray(arr, ?opts)`
 
 Return: Tree instance
 
@@ -262,7 +262,7 @@ createTreeFromTreeArray(arr);
  */
 ```
 
-### Adding Additional Nodes to existing tree
+### Adding Additional Nodes to Existing Tree
 
 #### Manually via Declared Nodes
 
@@ -572,7 +572,7 @@ tree.flattenByHeight(nodeData)
 
 Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each height level in the tree. Extract the 'data' property of each Node (if node is not null). This is a helper method which is essentially `flattenByHeight(nodeData)`;
 
-Return: Array<Array<Node|null>>
+Return: Array<Array<any>>
 
 #### `widthsByHeight()`
 
