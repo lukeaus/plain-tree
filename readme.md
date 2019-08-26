@@ -381,6 +381,8 @@ Description: The tree root
 
 Traverse every node in the tree breath first
 
+Return: void
+
 ##### fn
 
 Type: Function
@@ -392,6 +394,8 @@ Type: Function
 #### `traverseDepthFirst(fn)`
 
 Traverse every node in the tree depth first
+
+Return: void
 
 ##### fn
 
@@ -539,7 +543,7 @@ Return: Array<any>
 
 Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each height level in the tree.
 
-Return: Array<Array<Node|null>>
+Return: Array<Array<any>>
 
 ##### fn
 
@@ -562,10 +566,10 @@ nodeA.addChild('b');
 const nodeC = nodeA.addChild('c');
 nodeC.addChild('d');
 
-tree.flattenByHeight(nodeData)
+tree.flattenByHeight(nodeData);
 /* Output
 [['a'], ['b', 'c'], ['d']];
-*.
+*/
 ```
 
 #### `flattenDataByHeight()`
@@ -744,7 +748,7 @@ Return: Number
 
 Traverse node and its children breath first and flatten into an array of arrays, where each array is for each height level (with this node at height 0).
 
-Return: Array<Array<Node|null>>
+Return: Array<Array<any>>
 
 ##### fn
 
@@ -766,10 +770,11 @@ nodeA.addChild('b');
 const nodeC = nodeA.addChild('c');
 nodeC.addChild('d');
 
-nodeA.flattenByHeight(nodeData)
+nodeA.flattenByHeight(nodeData);
 /* Output
 [['a'], ['b', 'c'], ['d']];
-*.
+*/
+```
 
 ### Utils
 
@@ -819,4 +824,7 @@ Contributions are welcomed. How to make a contribution:
 - Test changes `npm run test`
 - Use `npm run commit` to commit
 - Create a pull request
+
+```
+
 ```

@@ -90,7 +90,7 @@ class Node {
     return this.widthsByHeight().length - 1;
   }
 
-  flattenByHeight(fn: Function | null = null): NodeOrNull[][] {
+  flattenByHeight(fn: Function | null = null): any[][] {
     return flattenByHeight(this, fn);
   }
 }

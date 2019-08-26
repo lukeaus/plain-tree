@@ -176,11 +176,11 @@ class Tree {
     return this.flatMap(nodeData);
   }
 
-  flattenByHeight(fn: Function | null = null): NodeOrNull[][] {
+  flattenByHeight(fn: Function | null = null): any[][] {
     return flattenByHeight(this.root, fn);
   }
 
-  flattenDataByHeight(): NodeOrNull[][] {
+  flattenDataByHeight(): any[][] {
     return this.flattenByHeight(nodeData);
   }
 

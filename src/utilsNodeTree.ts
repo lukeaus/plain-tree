@@ -44,7 +44,7 @@ export const widthsByHeight = (node: NodeOrNull): Array<number> => {
 export const flattenByHeight = (
   node: NodeOrNull,
   fn: Function | null = null
-): NodeOrNull[][] => {
+): any[][] => {
   let currentQueue = [node];
   let nextQueue: NodeOrNull[] = [];
   const result = [[fn(node)]];
