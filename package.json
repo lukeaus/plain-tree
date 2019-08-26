@@ -41,7 +41,8 @@
     "utilities",
     "node",
     "nodes",
-    "create"
+    "create",
+    "array"
   ],
   "author": {
     "name": "Luke Scott",
