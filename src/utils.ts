@@ -1,5 +1,4 @@
-import { NodeOrNull, SerializedNode } from './types';
-import Node from './Node';
+import { NodeOrNull } from './types';
 
 export const nodeData = (node: NodeOrNull): any => {
   return node && 'data' in node ? node.data : node;
@@ -47,40 +46,4 @@ export const filterObject = (
       return o;
     }, {});
   return filteredObj;
-};
-
-export const nodeToJsonFormatter = (node: Node): SerializedNode => {
-  const { parent, data, children, id } = node;
-  const obj: SerializedNode = {
-    data,
-    children,
-    id,
-    parentId: null
-  };
-  parent && (obj.parentId = parent.id);
-  obj.children = (node.children as Node[]).map(
-    (child: Node): SerializedNode => nodeToJsonFormatter(child)
-  );
-  return obj;
-};
-
-export const widthsByHeight = (node: NodeOrNull): Array<number> => {
-  if (node === null) {
-    return [1];
-  } else {
-    const counter = [1];
-    let currentQueue = [node];
-    let nextQueue: NodeOrNull[] = [];
-    do {
-      while (currentQueue.length) {
-        const node = currentQueue.pop();
-        hasChildren(node) && nextQueue.push(...node.children);
-      }
-      if (nextQueue.length) {
-        counter[counter.length] = nextQueue.length;
-      }
-      [nextQueue, currentQueue] = [currentQueue, nextQueue];
-    } while (currentQueue.length);
-    return counter;
-  }
 };

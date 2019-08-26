@@ -1,4 +1,9 @@
-import { generateId, nodeToJsonFormatter, widthsByHeight } from './utils';
+import { generateId } from './utils';
+import {
+  nodeToJsonFormatter,
+  widthsByHeight,
+  flattenByHeight
+} from './utilsNodeTree';
 import { NodeOrNull } from './types';
 
 class Node {
@@ -83,6 +88,10 @@ class Node {
 
   height(): number {
     return this.widthsByHeight().length - 1;
+  }
+
+  flattenByHeight(fn: Function | null = null): NodeOrNull[][] {
+    return flattenByHeight(this, fn);
   }
 }
 

@@ -1,10 +1,6 @@
 import Node from './Node';
-import {
-  nodeData,
-  hasChildren,
-  firstArrayElement,
-  widthsByHeight
-} from './utils';
+import { nodeData, hasChildren, firstArrayElement } from './utils';
+import { widthsByHeight, flattenByHeight } from './utilsNodeTree';
 import { NodeOrNull } from './types';
 
 type TraverseReturn = void | boolean | Array<NodeOrNull>;
@@ -181,25 +177,7 @@ class Tree {
   }
 
   flattenByHeight(fn: Function | null = null): NodeOrNull[][] {
-    let currentQueue = [this.root];
-    let nextQueue: NodeOrNull[] = [];
-    const result = [[fn(this.root)]];
-    do {
-      while (currentQueue.length) {
-        const node = currentQueue.pop();
-        hasChildren(node) && nextQueue.push(...node.children);
-      }
-      if (nextQueue.length) {
-        // explicit argument passing to fn to placate TypeScript
-        if (fn) {
-          result[result.length] = nextQueue.map(node => fn(node));
-        } else {
-          result[result.length] = nextQueue;
-        }
-      }
-      [nextQueue, currentQueue] = [currentQueue, nextQueue];
-    } while (currentQueue.length);
-    return result;
+    return flattenByHeight(this.root, fn);
   }
 
   flattenDataByHeight(): NodeOrNull[][] {

@@ -740,6 +740,37 @@ Return the depth of the node.
 
 Return: Number
 
+#### `flattenByHeight(?fn)`
+
+Traverse node and its children breath first and flatten into an array of arrays, where each array is for each height level (with this node at height 0).
+
+Return: Array<Array<Node|null>>
+
+##### fn
+
+Type: Function
+
+Default: null (if null, flatten will push the node into the array)
+
+| Parameter | Type         | Description    |
+| --------- | ------------ | -------------- |
+| 1         | Node \| null | A Node or null |
+
+##### Example
+
+```javascript
+import { Node } from '@lukeaus/plain-tree';
+
+const nodeA = new Node('a');
+nodeA.addChild('b');
+const nodeC = nodeA.addChild('c');
+nodeC.addChild('d');
+
+nodeA.flattenByHeight(nodeData)
+/* Output
+[['a'], ['b', 'c'], ['d']];
+*.
+
 ### Utils
 
 #### `nodeData(node)`
@@ -788,3 +819,4 @@ Contributions are welcomed. How to make a contribution:
 - Test changes `npm run test`
 - Use `npm run commit` to commit
 - Create a pull request
+```

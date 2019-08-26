@@ -231,3 +231,16 @@ describe('Node', () => {
     });
   });
 });
+describe('flattenByHeight', () => {
+  test('node is not null', () => {
+    const node = new Node('a');
+    expect(node.flattenByHeight(nodeData)).toEqual([['a']]);
+  });
+  test('it works', () => {
+    const nodeA = new Node('a');
+    nodeA.addChild('b');
+    const nodeC = nodeA.addChild('c');
+    nodeC.addChild('d');
+    expect(nodeA.flattenByHeight(nodeData)).toEqual([['a'], ['b', 'c'], ['d']]);
+  });
+});
