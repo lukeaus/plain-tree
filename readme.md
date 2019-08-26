@@ -824,7 +824,3 @@ Contributions are welcomed. How to make a contribution:
 - Test changes `npm run test`
 - Use `npm run commit` to commit
 - Create a pull request
-
-```
-
-```
