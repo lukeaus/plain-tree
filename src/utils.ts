@@ -1,14 +1,12 @@
-import { NodeOrNull } from './types';
-
-export const nodeData = (node: NodeOrNull): any => {
+export const nodeData = (node: any): any => {
   return node && 'data' in node ? node.data : node;
 };
 
-export const nodesData = (nodes: Array<NodeOrNull>): any => {
+export const nodesData = (nodes: Array<any>): any => {
   return nodes.map(nodeData);
 };
 
-export const hasChildren = (node: NodeOrNull): boolean => {
+export const hasChildren = (node: any): boolean => {
   return Boolean(node && node.children && node.children.length);
 };
 

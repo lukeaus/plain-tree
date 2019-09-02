@@ -776,43 +776,43 @@ nodeA.flattenByHeight(nodeData);
 */
 ```
 
-### Utils
-
-#### `nodeData(node)`
-
-Return a nodes data. Safe function to protect against accessing `data` property on null.
-
-Return: any
-
-##### node
-
-Type: Node | null
-
-#### `nodesData(nodes)`
-
-Convenience method to return all node data on an array of nodes.
-
-Return: Array<any>
-
-##### nodes
-
-Type: Array<Node|null>
-
-#### `hasChildren(node)`
-
-Return `true` if node has children. Return `false` if no children.
-
-Return: boolean
-
-##### node
-
-Type: Node | null
-
 #### `toJson()`
 
 Stringify the node. Due to circular dependencies, parent property is dropped and replaced with parentId (type String | null).
 
 Return: String
+
+### Utils
+
+#### `nodeData(any)`
+
+Return a nodes data. Safe function to protect against accessing `data` property on null.
+
+Return: any
+
+##### any
+
+Type: any
+
+#### `nodesData(any)`
+
+Convenience method to return all node data on an array of nodes.
+
+Return: Array<any>
+
+##### any
+
+Type: Array<any>
+
+#### `hasChildren(any)`
+
+Return `true` if node has children. Return `false` if no children.
+
+Return: boolean
+
+##### any
+
+Type: any
 
 ## Contributing
 
