@@ -75,7 +75,7 @@
     "eslint-plugin-prettier": "3.1.0",
     "husky": "3.0.4",
     "jest": "24.9.0",
-    "microbundle": "0.11.0",
+    "microbundle": "0.15.1",
     "prettier": "1.18.2",
     "pretty-quick": "1.11.1",
     "rimraf": "3.0.0",
