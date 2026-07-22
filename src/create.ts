@@ -77,7 +77,7 @@ export const createTreeArrayFromFlatArray = (
   }: CreateOptionsWithCustomChildrenKey = {}
 ): Array<ObjectAnyProperties> => {
   const treeArray: Array<ObjectAnyProperties> = [];
-  const childrenOf = {};
+  const childrenOf: { [key: string]: any[] } = {};
   data.forEach((obj: any) => {
     const id = obj[idKey];
     const parentId = obj[parentIdKey];
@@ -103,7 +103,7 @@ export const createTreeArrayFromFlatArray = (
  * 'data' on the node.
  */
 export const objectToNode = (
-  obj: object,
+  obj: ObjectAnyProperties,
   parent: NodeOrNull = null,
   {
     idKey = ID_KEY_DEFAULT,

@@ -34,12 +34,12 @@ export const firstArrayElement = (arr: any): any => {
  * Return a new object without properties in disallowedKeys
  */
 export const filterObject = (
-  obj: object,
+  obj: { [key: string]: any },
   { disallowedKeys = [] }: { disallowedKeys: Array<string> }
-): object => {
+): { [key: string]: any } => {
   const filteredObj = Object.keys(obj)
     .filter(key => !disallowedKeys.includes(key))
-    .reduce((o, key) => {
+    .reduce<{ [key: string]: any }>((o, key) => {
       o[key] = obj[key];
       return o;
     }, {});

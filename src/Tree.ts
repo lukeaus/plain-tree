@@ -19,7 +19,7 @@ class Tree {
   private _traverse(
     fn: Function,
     { some, every, returnBoolean, returnArray }: TraverseOptions = {},
-    queueMethod: string
+    queueMethod: 'push' | 'unshift'
   ): TraverseReturn {
     const queue = [this.root];
     const results: Array<NodeOrNull> = [];
