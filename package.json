@@ -2,22 +2,25 @@
   "name": "@lukeaus/plain-tree",
   "description": "A plain tree with a bunch of tree tools",
   "version": "0.0.0",
-  "source": "src/index.ts",
   "main": "build/index.js",
   "module": "build/index.mjs",
   "unpkg": "build/index.umd.js",
+  "types": "build/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "build",
-    "README.md"
+    "readme.md"
   ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "prebuild": "rimraf build .rts2_*",
+    "build": "rollup -c rollup.config.mjs",
+    "smoke": "bash scripts/smoke/pack.sh",
     "prepare": "husky"
   },
   "repository": {

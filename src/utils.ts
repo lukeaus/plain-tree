@@ -12,9 +12,7 @@ export const hasChildren = (node: any): boolean => {
 
 const generateChars = (length: number): string => {
   const random11Chars = (): string =>
-    Math.random()
-      .toString(36)
-      .substring(2, 15);
+    Math.random().toString(36).substring(2, 15);
   let chars = '';
   while (chars.length < length) {
     chars += random11Chars();

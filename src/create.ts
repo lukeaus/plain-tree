@@ -243,9 +243,8 @@ export const createTreeFromFlatArray = (
   opts: CreateOptions = {}
 ): any => {
   const mappedFlatArray = mapFlatArray(data, opts);
-  const treeArray: Array<ObjectAnyProperties> = createTreeArrayFromFlatArray(
-    mappedFlatArray
-  );
+  const treeArray: Array<ObjectAnyProperties> =
+    createTreeArrayFromFlatArray(mappedFlatArray);
   if (!treeArray.length) {
     return new Tree();
   } else if ((treeArray.length = 1)) {
