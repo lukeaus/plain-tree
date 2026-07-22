@@ -103,7 +103,7 @@ export const createTreeArrayFromFlatArray = (
  * 'data' on the node.
  */
 export const objectToNode = (
-  obj: ObjectAnyProperties,
+  obj: object,
   parent: NodeOrNull = null,
   {
     idKey = ID_KEY_DEFAULT,
@@ -111,12 +111,13 @@ export const objectToNode = (
     childrenKey = CHILDREN_KEY_DEFAULT
   }: CreateOptionsWithCustomChildrenKey = {}
 ): Node => {
+  const indexed = obj as { [key: string]: any };
   const disallowedKeys = [idKey, parentIdKey, childrenKey];
   const data = filterObject(obj, { disallowedKeys });
   if (parent) {
-    return parent.addChild(data, { id: obj[idKey] });
+    return parent.addChild(data, { id: indexed[idKey] });
   } else {
-    return new Node(data, { id: obj[idKey] });
+    return new Node(data, { id: indexed[idKey] });
   }
 };
 

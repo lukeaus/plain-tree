@@ -32,13 +32,14 @@ export const firstArrayElement = (arr: any): any => {
  * Return a new object without properties in disallowedKeys
  */
 export const filterObject = (
-  obj: { [key: string]: any },
+  obj: object,
   { disallowedKeys = [] }: { disallowedKeys: Array<string> }
 ): { [key: string]: any } => {
-  const filteredObj = Object.keys(obj)
+  const indexed = obj as { [key: string]: any };
+  const filteredObj = Object.keys(indexed)
     .filter(key => !disallowedKeys.includes(key))
     .reduce<{ [key: string]: any }>((o, key) => {
-      o[key] = obj[key];
+      o[key] = indexed[key];
       return o;
     }, {});
   return filteredObj;

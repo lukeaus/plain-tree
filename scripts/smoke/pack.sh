@@ -24,7 +24,7 @@ fi
 
 cleanup() {
   [ -n "$CONSUMER_DIR" ] && rm -rf "$CONSUMER_DIR"
-  rm -f "$ESM_CONVERTED_PATH" "$ALLOWLIST_FILE" "$ACTUAL_FILE" "$DRYRUN_FILE"
+  rm -f "$ESM_CONVERTED_PATH" "$ALLOWLIST_FILE" "$ACTUAL_FILE" "$DRYRUN_FILE" /tmp/deps.json
   if [ -n "$TARBALL" ] && [ "$RETAIN_TARBALL" = "false" ]; then
     rm -f "$TARBALL"
   fi
@@ -129,6 +129,10 @@ assert.strictEqual(pkg.types, "build/index.d.ts");
 assert.ok(!("source" in pkg), "source field must be absent");
 assert.ok(!("exports" in pkg), "exports map must be absent");
 assert.ok(!("engines" in pkg), "engines field must be absent");
+assert.ok(
+  !pkg.dependencies || Object.keys(pkg.dependencies).length === 0,
+  "runtime dependencies must be empty, got: " + JSON.stringify(pkg.dependencies)
+);
 console.log("Packed manifest OK");
 ' "$TARBALL"
 
@@ -143,8 +147,22 @@ echo '{"name":"smoke-consumer","version":"0.0.0","private":true}' > "$CONSUMER_D
 (cd "$CONSUMER_DIR" && NPM_CONFIG_USERCONFIG=/dev/null npm install "$TARBALL")
 
 # 9. Runtime dependency tree empty (VAL-PKG-019)
-NPM_CONFIG_USERCONFIG=/dev/null npm ls --omit=dev --all --prefix "$CONSUMER_DIR"
-echo "Runtime dependency tree OK"
+NPM_CONFIG_USERCONFIG=/dev/null npm ls --omit=dev --all --json --prefix "$CONSUMER_DIR" > /tmp/deps.json
+node -e '
+const fs = require("fs");
+const assert = require("assert");
+const tree = JSON.parse(fs.readFileSync("/tmp/deps.json", "utf8"));
+const pkg = tree.dependencies && tree.dependencies["@lukeaus/plain-tree"];
+assert.ok(pkg, "@lukeaus/plain-tree not found in installed tree");
+const runtimeDeps = pkg.dependencies || {};
+const depNames = Object.keys(runtimeDeps);
+assert.deepStrictEqual(
+  depNames,
+  [],
+  "runtime dependencies must be empty, got: " + JSON.stringify(depNames)
+);
+console.log("Runtime dependency tree OK (zero deps)");
+'
 
 # 10. ESM -> CJS conversion for the ES5 gate (exported path so es5-check reads it)
 "$REPO_DIR/node_modules/.bin/rollup" \

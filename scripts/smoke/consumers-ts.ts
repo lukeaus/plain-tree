@@ -109,4 +109,28 @@ const fo: { [key: string]: any } = filterObject(
   { disallowedKeys: ['b'] }
 );
 
+// --- scrutiny round 1 probes: named interface and class instance ---
+// These compile only if objectToNode and filterObject accept `object`,
+// not a string index-signature type. Object literals do not detect the
+// narrowing; named interfaces and class instances do.
+interface NamedItem {
+  id: string;
+  foo: string;
+}
+const namedItem: NamedItem = { id: 'ni', foo: 'bar' };
+const nodeFromNamed: Node = objectToNode(namedItem);
+const filteredNamed: { [key: string]: any } = filterObject(namedItem, {
+  disallowedKeys: ['id']
+});
+
+class ClassItem {
+  id = 'ci';
+  foo = 'baz';
+}
+const classInstance = new ClassItem();
+const nodeFromClass: Node = objectToNode(classInstance);
+const filteredClass: { [key: string]: any } = filterObject(classInstance, {
+  disallowedKeys: ['id']
+});
+
 console.log('Strict TS consumer OK');
