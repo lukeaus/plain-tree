@@ -110,9 +110,12 @@ const fo: { [key: string]: any } = filterObject(
 );
 
 // --- scrutiny round 1 probes: named interface and class instance ---
-// These compile only if objectToNode and filterObject accept `object`,
-// not a string index-signature type. Object literals do not detect the
-// narrowing; named interfaces and class instances do.
+// Supplementary forward coverage: these calls exercise objectToNode and
+// filterObject against named-interface and class-instance arguments. The
+// active declaration regression gate is the AST check in
+// decl-param-check.cjs, which asserts the first parameter is exactly the
+// `object` keyword in the packed .d.ts; these probes do not distinguish
+// an any-valued index signature under TypeScript 6.
 interface NamedItem {
   id: string;
   foo: string;
