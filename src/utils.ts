@@ -12,9 +12,7 @@ export const hasChildren = (node: any): boolean => {
 
 const generateChars = (length: number): string => {
   const random11Chars = (): string =>
-    Math.random()
-      .toString(36)
-      .substring(2, 15);
+    Math.random().toString(36).substring(2, 15);
   let chars = '';
   while (chars.length < length) {
     chars += random11Chars();
@@ -36,11 +34,12 @@ export const firstArrayElement = (arr: any): any => {
 export const filterObject = (
   obj: object,
   { disallowedKeys = [] }: { disallowedKeys: Array<string> }
-): object => {
-  const filteredObj = Object.keys(obj)
+): { [key: string]: any } => {
+  const indexed = obj as { [key: string]: any };
+  const filteredObj = Object.keys(indexed)
     .filter(key => !disallowedKeys.includes(key))
-    .reduce((o, key) => {
-      o[key] = obj[key];
+    .reduce<{ [key: string]: any }>((o, key) => {
+      o[key] = indexed[key];
       return o;
     }, {});
   return filteredObj;

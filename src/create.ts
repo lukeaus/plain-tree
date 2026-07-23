@@ -77,7 +77,7 @@ export const createTreeArrayFromFlatArray = (
   }: CreateOptionsWithCustomChildrenKey = {}
 ): Array<ObjectAnyProperties> => {
   const treeArray: Array<ObjectAnyProperties> = [];
-  const childrenOf = {};
+  const childrenOf: { [key: string]: any[] } = {};
   data.forEach((obj: any) => {
     const id = obj[idKey];
     const parentId = obj[parentIdKey];
@@ -111,12 +111,13 @@ export const objectToNode = (
     childrenKey = CHILDREN_KEY_DEFAULT
   }: CreateOptionsWithCustomChildrenKey = {}
 ): Node => {
+  const indexed = obj as { [key: string]: any };
   const disallowedKeys = [idKey, parentIdKey, childrenKey];
   const data = filterObject(obj, { disallowedKeys });
   if (parent) {
-    return parent.addChild(data, { id: obj[idKey] });
+    return parent.addChild(data, { id: indexed[idKey] });
   } else {
-    return new Node(data, { id: obj[idKey] });
+    return new Node(data, { id: indexed[idKey] });
   }
 };
 
@@ -243,9 +244,8 @@ export const createTreeFromFlatArray = (
   opts: CreateOptions = {}
 ): any => {
   const mappedFlatArray = mapFlatArray(data, opts);
-  const treeArray: Array<ObjectAnyProperties> = createTreeArrayFromFlatArray(
-    mappedFlatArray
-  );
+  const treeArray: Array<ObjectAnyProperties> =
+    createTreeArrayFromFlatArray(mappedFlatArray);
   if (!treeArray.length) {
     return new Tree();
   } else if ((treeArray.length = 1)) {

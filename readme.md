@@ -6,7 +6,7 @@
 
 ---
 
-[![Tests](https://img.shields.io/travis/lukeaus/plain-tree/master.svg)](https://travis-ci.org/lukeaus/plain-tree)
+[![CI](https://github.com/lukeaus/plain-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/lukeaus/plain-tree/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/github/license/lukeaus/plain-tree.svg)](https://github.com/lukeaus/plain-tree/blob/master/LICENSE)
 [![version](https://img.shields.io/npm/v/@lukeaus/plain-tree.svg)](https://www.npmjs.com/@lukeaus/plain-tree)
 [![npm downloads](https://img.shields.io/npm/dm/@lukeaus/plain-tree.svg)](http://npm-stat.com/charts.html?package=@lukeaus/plain-tree&from=2019-08-20)

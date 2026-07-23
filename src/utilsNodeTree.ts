@@ -14,8 +14,8 @@ export const nodeToJsonFormatter = (node: Node): SerializedNode => {
     parentId: null
   };
   parent && (obj.parentId = parent.id);
-  obj.children = (node.children as Node[]).map(
-    (child: Node): SerializedNode => nodeToJsonFormatter(child)
+  obj.children = (node.children as Node[]).map((child: Node): SerializedNode =>
+    nodeToJsonFormatter(child)
   );
   return obj;
 };
