@@ -14,6 +14,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CHECK="$SCRIPT_DIR/check-npm-auth.sh"
 WORK="$(mktemp -d)"
+# Clean cwd with no .npmrc so default-mode resolver probes inspect only the
+# stubbed npm resolver, never a host repository config.
+mkdir -p "$WORK/clean-cwd"
 trap 'rm -rf "$WORK"' EXIT
 
 # Non-sensitive fixture value used only to assert it never appears in output.
@@ -58,6 +61,43 @@ assert_rejected() {
   fi
 }
 
+# run_check_default <stub-dir> [extra env NAME=VAL ...]
+# Runs the check in default mode (no file args; resolves userconfig/globalconfig
+# via the stubbed npm on PATH) from the clean temp cwd. Captures combined
+# output into RUN_OUT and the exit code into RUN_RC.
+run_check_default() {
+  stubdir="$1"; shift
+  RUN_OUT="$(mktemp)"
+  set +e
+  ( cd "$WORK/clean-cwd" && env -i PATH="$stubdir:$PATH" "$@" bash "$CHECK" >"$RUN_OUT" 2>&1 )
+  RUN_RC=$?
+  set -e
+}
+
+# assert_resolver_fails <label> <stub-body>
+# A stubbed npm that makes `npm config get userconfig`/`globalconfig` fail must
+# fail the auth guard closed: nonzero exit, no misleading user/global
+# "absent (OK)" success, no final success line, and no value leak.
+assert_resolver_fails() {
+  label="$1"; stub_body="$2"
+  stubdir="$(mktemp -d)"
+  printf '%s\n' "$stub_body" >"$stubdir/npm"
+  chmod +x "$stubdir/npm"
+  run_check_default "$stubdir"
+  rm -rf "$stubdir"
+  if [ "$RUN_RC" -ne 0 ] \
+     && ! grep -qF 'user npm config absent (OK)' "$RUN_OUT" \
+     && ! grep -qF 'global npm config absent (OK)' "$RUN_OUT" \
+     && ! grep -qF 'no nonempty npm auth-bearing config found (OK)' "$RUN_OUT" \
+     && ! grep -qF "$MARKER" "$RUN_OUT"; then
+    echo "PASS (resolver-fail): $label"; pass=$((pass + 1))
+  else
+    leaked=no; grep -qF "$MARKER" "$RUN_OUT" && leaked=yes
+    echo "FAIL (resolver-fail): $label (rc=$RUN_RC, leaked=$leaked)"; fail=$((fail + 1))
+    cat "$RUN_OUT"
+  fi
+}
+
 # Positive: clean config has no auth-bearing key.
 cat >"$WORK/clean.npmrc" <<'EOF'
 registry=https://registry.npmjs.org/
@@ -86,6 +126,17 @@ printf '  _authToken  =  %s  \n' "$MARKER" >"$WORK/fixture.npmrc"; assert_reject
 
 # Negative env probe: a disposable npm_config_* auth var must be rejected too.
 assert_rejected 'env npm_config__authtoken' "$WORK/clean.npmrc" "npm_config__authtoken=$MARKER"
+
+# Negative resolver probes (Bash 3.2 compatible): a stubbed npm that makes
+# `npm config get userconfig`/`globalconfig` fail must fail the auth guard
+# closed — nonzero exit, no misleading "absent (OK)" success, no value leak.
+# Covers both nonzero-exit and empty-output resolver failures; a resolver
+# failure must never mask as an absent-config success.
+assert_resolver_fails 'npm config get exits nonzero' '#!/bin/sh
+exit 1'
+
+assert_resolver_fails 'npm config get returns empty' '#!/bin/sh
+exit 0'
 
 echo "---"
 echo "probes: $pass passed, $fail failed"
