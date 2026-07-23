@@ -68,6 +68,27 @@ check_env() {
   return $bad
 }
 
+# Resolve an npm config path via `npm config get <key>`. Args: scope, key.
+# Sets RESOLVED on success and returns 0. Fails closed (returns 1, stderr
+# message) when the resolver exits nonzero OR returns empty/undefined/null —
+# a resolver failure must never mask as an "absent (OK)" success. Emits only
+# scope/key/failure-mode, never a value.
+resolve_npm_config_path() {
+  scope="$1"; key="$2"
+  out=$(npm config get "$key" 2>/dev/null) || {
+    echo "ERROR: $scope npm config resolver 'npm config get $key' failed (nonzero exit)" >&2
+    return 1
+  }
+  case "$out" in
+    ""|undefined|null)
+      echo "ERROR: $scope npm config resolver 'npm config get $key' returned empty/undefined/null" >&2
+      return 1
+      ;;
+  esac
+  RESOLVED="$out"
+  return 0
+}
+
 status=0
 if [ "$#" -gt 0 ]; then
   i=0
@@ -77,8 +98,11 @@ if [ "$#" -gt 0 ]; then
   done
 else
   check_file repository "$PWD/.npmrc" || status=1
-  check_file user "$(npm config get userconfig)" || status=1
-  check_file global "$(npm config get globalconfig)" || status=1
+  # Resolve user/global paths separately so a resolver failure fails closed
+  # instead of masking as "absent (OK)". check_file runs only on a successful
+  # resolve; a failed resolve sets status=1 and emits no success message.
+  resolve_npm_config_path user userconfig && check_file user "$RESOLVED" || status=1
+  resolve_npm_config_path global globalconfig && check_file global "$RESOLVED" || status=1
 fi
 check_env || status=1
 
