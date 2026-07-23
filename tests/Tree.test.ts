@@ -266,6 +266,19 @@ describe('Tree', () => {
         expect(tree.everyBreathFirst(fn)).toBe(true);
         expect(fn.mock.calls.length).toBe(3);
       });
+      test('visits nodes in breadth-first order', () => {
+        const tree = new Tree();
+        tree.root = new Node(1);
+        tree.root.addChild(2);
+        tree.root.addChild(3);
+        tree.root.children[0].addChild(4);
+        const visited: Array<NodeOrNull> = [];
+        tree.everyBreathFirst((node: Node) => {
+          visited.push(node);
+          return true;
+        });
+        expect(nodesData(visited)).toEqual([1, 2, 3, 4]);
+      });
     });
     describe('returns false', () => {
       test('1 node null', () => {

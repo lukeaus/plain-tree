@@ -115,7 +115,7 @@ class Tree {
    */
   everyBreathFirst(fn: Function): boolean {
     return Boolean(
-      this._traverseDepthFirst(fn, {
+      this._traverseBreathFirst(fn, {
         every: true,
         returnBoolean: true
       })
