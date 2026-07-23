@@ -60,10 +60,13 @@ jobs:
           echo "release SHA: $GITHUB_SHA"
           git log v2.1.2..HEAD --format='%H%n%s%n%b%n---'
           echo "::endgroup::"
-          echo "::group::Sanitized npm auth-config (repository/user/global) — must show no nonempty auth-bearing key"
-          echo "repository .npmrc:"; [ -f .npmrc ] && sed -E 's/(_authToken=).*/\1<redacted>/; s/(_auth=).*/\1<redacted>/; s/(password=).*/\1<redacted>/; s/(:_authToken=).*/\1<redacted>/' .npmrc || echo "(none)"
-          echo "user .npmrc:"; [ -f ~/.npmrc ] && sed -E 's/(_authToken=).*/\1<redacted>/; s/(_auth=).*/\1<redacted>/; s/(password=).*/\1<redacted>/; s/(:_authToken=).*/\1<redacted>/' ~/.npmrc || echo "(none)"
-          echo "globalconfig path:"; npm config get globalconfig
+          echo "::group::npm auth-config evidence (repository/user/global + npm_config_* env, fail-closed)"
+          # Resolves repo .npmrc + npm config get userconfig/globalconfig, inspects
+          # each for nonempty auth-bearing keys (incl. scoped/case/spacing variants
+          # of _authToken/_auth/_password/password/token/username/otp/certfile/keyfile)
+          # and scans npm_config_* env. Exits nonzero (failing this step before
+          # semantic-release) on any nonempty auth-bearing value; never prints values.
+          bash scripts/release/check-npm-auth.sh
           echo "::endgroup::"
           echo "::group::Token env absence (NPM_TOKEN/NODE_AUTH_TOKEN must be absent)"
           echo "NPM_TOKEN=${NPM_TOKEN:+<present>}"
