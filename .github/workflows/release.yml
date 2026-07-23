@@ -1,0 +1,136 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # ponytail: pin actions to immutable commit SHAs; resolved to v4 tags at implementation
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+          # ponytail: no registry-url / no always-auth — npm Trusted Publishing uses OIDC, not a token
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test -- --runInBand
+      - run: npm run build
+      - run: npm audit --audit-level=moderate
+      - run: PACK_DIR="$RUNNER_TEMP/release-candidate" npm run smoke
+      # ponytail: one evidence step emits every pre-publication artifact the contract names (VAL-REL-002/003/007/008, VAL-CROSS-005). Sensitive values redacted; no secret contents are printed.
+      - name: Pre-publication evidence
+        run: |
+          set -euo pipefail
+          echo "::group::Node/npm versions"
+          node --version
+          npm --version
+          echo "::endgroup::"
+          echo "::group::semantic-release and plugin exact versions (npm ls)"
+          npm ls semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/npm @semantic-release/github
+          echo "::endgroup::"
+          echo "::group::Effective release config"
+          if [ -f .releaserc.json ]; then cat .releaserc.json
+          elif [ -f .releaserc.yml ]; then cat .releaserc.yml
+          elif [ -f .releaserc.yaml ]; then cat .releaserc.yaml
+          elif jq -e '.release' package.json >/dev/null 2>&1; then jq '.release' package.json
+          else echo "no release config found"; fi
+          echo "::endgroup::"
+          echo "::group::v2.1.2 tag resolution (local and origin)"
+          git rev-parse v2.1.2
+          git ls-remote --tags origin v2.1.2
+          echo "::endgroup::"
+          echo "::group::Current release SHA and final commit messages (v2.1.2..HEAD)"
+          echo "release SHA: $GITHUB_SHA"
+          git log v2.1.2..HEAD --format='%H%n%s%n%b%n---'
+          echo "::endgroup::"
+          echo "::group::Sanitized npm auth-config (repository/user/global) — must show no nonempty auth-bearing key"
+          echo "repository .npmrc:"; [ -f .npmrc ] && sed -E 's/(_authToken=).*/\1<redacted>/; s/(_auth=).*/\1<redacted>/; s/(password=).*/\1<redacted>/; s/(:_authToken=).*/\1<redacted>/' .npmrc || echo "(none)"
+          echo "user .npmrc:"; [ -f ~/.npmrc ] && sed -E 's/(_authToken=).*/\1<redacted>/; s/(_auth=).*/\1<redacted>/; s/(password=).*/\1<redacted>/; s/(:_authToken=).*/\1<redacted>/' ~/.npmrc || echo "(none)"
+          echo "globalconfig path:"; npm config get globalconfig
+          echo "::endgroup::"
+          echo "::group::Token env absence (NPM_TOKEN/NODE_AUTH_TOKEN must be absent)"
+          echo "NPM_TOKEN=${NPM_TOKEN:+<present>}"
+          echo "NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:+<present>}"
+          test -z "${NPM_TOKEN:-}" && test -z "${NODE_AUTH_TOKEN:-}" || { echo "unexpected token env present"; exit 1; }
+          echo "both absent (OK)"
+          echo "::endgroup::"
+          echo "::group::GitHub OIDC request environment presence"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL:+<present>}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN=${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+<present>}"
+          test -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" || { echo "ACTIONS_ID_TOKEN_REQUEST_URL absent"; exit 1; }
+          echo "::endgroup::"
+      # VAL-REL-008/021: authoritative dry-run at the exact release SHA with OIDC available, before any publish.
+      # First run: reports the next release version. Rerun: reports no next release (tag/version already exists).
+      - name: semantic-release dry-run (capture expected version or detect rerun)
+        id: dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm exec -- semantic-release --dry-run --no-ci 2>&1 | tee /tmp/dry-run.log
+          EXPECTED=$(grep -Eo 'The next release version is [0-9]+\.[0-9]+\.[0-9]+' /tmp/dry-run.log | tail -n1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' || true)
+          echo "expected-version=$EXPECTED" >> "$GITHUB_OUTPUT"
+          if [ -n "$EXPECTED" ]; then
+            echo "release-mode=first-run" >> "$GITHUB_OUTPUT"
+            echo "First run: expected next version $EXPECTED"
+          else
+            echo "release-mode=rerun" >> "$GITHUB_OUTPUT"
+            echo "Rerun: dry-run reports no next release (tag/version already exists)"
+          fi
+      # VAL-REL-013 pre-step: the target tag must be absent on the remote before publish (first run only).
+      # On rerun the tag already exists by design; this check is skipped.
+      - name: Verify expected version's remote tag is absent (first run only)
+        if: steps.dry-run.outputs.release-mode == 'first-run'
+        env:
+          EXPECTED: ${{ steps.dry-run.outputs.expected-version }}
+        run: |
+          set -euo pipefail
+          echo "Checking remote tag v$EXPECTED is absent..."
+          if git ls-remote --tags origin "v$EXPECTED" | grep -q .; then
+            echo "ERROR: remote tag v$EXPECTED already exists before publish"; exit 1
+          fi
+          echo "remote tag v$EXPECTED absent (OK)"
+      # Real publish (first run): selected version must equal dry-run expected version.
+      # Rerun: semantic-release runs as a no-op; must succeed and produce no new version/tag/release.
+      - name: semantic-release (real publish or no-op rerun)
+        id: real-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NO NPM_TOKEN, NO NODE_AUTH_TOKEN. Publication goes through npm Trusted Publishing (OIDC).
+        run: |
+          set -euo pipefail
+          MODE="${{ steps.dry-run.outputs.release-mode }}"
+          EXPECTED="${{ steps.dry-run.outputs.expected-version }}"
+          npm exec -- semantic-release 2>&1 | tee /tmp/release.log
+          SELECTED=$(grep -Eo 'The next release version is [0-9]+\.[0-9]+\.[0-9]+' /tmp/release.log | tail -n1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' || true)
+          echo "selected-version=$SELECTED" >> "$GITHUB_OUTPUT"
+          if [ "$MODE" = "first-run" ]; then
+            if [ -z "$SELECTED" ]; then echo "first-run real run did not report a selected version"; exit 1; fi
+            if [ "$SELECTED" != "$EXPECTED" ]; then
+              echo "ERROR: selected ($SELECTED) != dry-run expected ($EXPECTED)"; exit 1
+            fi
+            echo "first-run: selected ($SELECTED) == dry-run expected ($EXPECTED) (OK)"
+          else
+            # rerun: semantic-release must report no new release
+            if [ -n "$SELECTED" ]; then
+              echo "ERROR: rerun produced a new release version $SELECTED — not idempotent"; exit 1
+            fi
+            echo "rerun: semantic-release reports no new release (OK, idempotent)"
+          fi
