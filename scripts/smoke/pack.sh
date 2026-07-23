@@ -136,6 +136,11 @@ assert.ok(
 console.log("Packed manifest OK");
 ' "$TARBALL"
 
+# 6b. Packed declaration contract: objectToNode and filterObject first
+# parameter must be exactly `object` (ObjectKeyword), parsed via the
+# installed TypeScript compiler API (VAL-PKG-016, VAL-PKG-017 round 2).
+node "$SMOKE_DIR/decl-param-check.cjs" "$TARBALL"
+
 # 7. Temp consumer: copy smoke files, init
 CONSUMER_DIR="$(mktemp -d)"
 cp "$SMOKE_DIR/consumers.cjs" "$SMOKE_DIR/consumers.mjs" \
