@@ -248,7 +248,7 @@ export const createTreeFromFlatArray = (
     createTreeArrayFromFlatArray(mappedFlatArray);
   if (!treeArray.length) {
     return new Tree();
-  } else if ((treeArray.length = 1)) {
+  } else if (treeArray.length === 1) {
     return createTreeFromTreeArray(treeArray);
   } else {
     // TODO: add functionality

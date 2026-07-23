@@ -334,6 +334,17 @@ describe('createTreeFromFlatArray', () => {
       });
     });
   });
+  describe('throws on arrays with more than one root', () => {
+    test('throws when the flat array has multiple roots', () => {
+      const list: Array<ObjectAnyProperties> = [
+        { id: 'a', name: 'A', parentId: null },
+        { id: 'b', name: 'B', parentId: null }
+      ];
+      expect(() => createTreeFromFlatArray(list)).toThrow(
+        /only accepts an array with 0 or 1 node/
+      );
+    });
+  });
   describe('custom object properties', () => {
     test('from array with 1 root', () => {
       const list: Array<ObjectAnyProperties> = [
