@@ -32,7 +32,9 @@ jobs:
       - run: npm run lint
       - run: npm test -- --runInBand
       - run: npm run build
-      - run: npm audit --audit-level=moderate
+      # ponytail: audit the publishable tree only (same as ci.yml). The vendored
+      # `npm` CLI bundles deps that npm itself flags and this repo cannot fix.
+      - run: npm audit --omit=dev --audit-level=moderate
       - run: PACK_DIR="$RUNNER_TEMP/release-candidate" npm run smoke
       # ponytail: one evidence step emits every pre-publication artifact the contract names (VAL-REL-002/003/007/008, VAL-CROSS-005). Sensitive values redacted; no secret contents are printed.
       - name: Pre-publication evidence
