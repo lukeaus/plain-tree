@@ -23,7 +23,11 @@ jobs:
       - run: npm run lint
       - run: npm test -- --runInBand
       - run: npm run build
+      # ponytail: audit the publishable tree only. The vendored `npm` CLI (a
+      # dev-only dep of @semantic-release/npm) ships bundled deps that are
+      # constantly flagged and cannot be fixed from this repo; npm warns on
+      # dev-tree advisories during install instead.
       - if: matrix.node == 24
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
       - if: matrix.node == 24
         run: npm run smoke
