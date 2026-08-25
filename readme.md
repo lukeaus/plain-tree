@@ -31,7 +31,7 @@ Performant tree and node utility library.
   - Find one
   - Find all
   - Some/Every
-- Traverse (breath first and depth first)
+- Traverse (breadth-first and depth first)
 - Nodes at height
 - Nodes count
   - all
@@ -278,7 +278,7 @@ const nodeC = nodeB.addChild('c');
 
 #### Manually via Children
 
-Add nodes by accessinga node's children (and their children, and their children's children etc.)
+Add nodes by accessing a node's children (and their children, and their children's children etc.)
 
 ```javascript
 import { Node, Tree } from '@lukeaus/plain-tree';
@@ -379,7 +379,7 @@ Description: The tree root
 
 #### `traverseBreathFirst(fn)`
 
-Traverse every node in the tree breath first
+Traverse every node in the tree breadth-first
 
 Return: void
 
@@ -407,7 +407,7 @@ Type: Function
 
 #### `findOneBreathFirst(fn)`
 
-Traverse nodes in the tree breath first. Returns the first matching Node or null.
+Traverse nodes in the tree breadth-first. Returns the first matching Node or null.
 
 Return: Node | null
 
@@ -435,7 +435,7 @@ Type: Function
 
 #### `findAllBreathFirst(fn)`
 
-Traverse nodes in the tree breath first. Returns an array containing all matching Nodes.
+Traverse nodes in the tree breadth-first. Returns an array containing all matching Nodes.
 
 Return: Array<Node>
 
@@ -463,7 +463,7 @@ Type: Function
 
 #### `someBreathFirst(fn)`
 
-Traverse nodes in the tree breath first. Return true if a single node is truthy for fn, else return false. Breaks on first truthy for performance.
+Traverse nodes in the tree breadth-first. Return true if a single node is truthy for fn, else return false. Breaks on first truthy for performance.
 
 Return: Boolean
 
@@ -491,7 +491,7 @@ Type: Function
 
 #### `everyBreathFirst(fn)`
 
-Traverse every node in the tree breath first. Return true if every node is truthy for fn, else return false. Breaks on first falsey for performance.
+Traverse every node in the tree breadth-first. Return true if every node is truthy for fn, else return false. Breaks on first falsey for performance.
 
 Return: Boolean
 
@@ -519,7 +519,7 @@ Type: Function
 
 #### `flatMap(?fn)`
 
-Traverse every node in the tree breath first and flatten the tree into a single array.
+Traverse every node in the tree breadth-first and flatten the tree into a single array.
 
 Return: Array<Node|null>
 
@@ -535,13 +535,13 @@ Default: null (if null, flatten will push the node into the array)
 
 #### `flattenData()`
 
-Traverse every node in the tree breath first and flatten the tree into a single array. Extract the 'data' property of each Node (if node is not null) and return an array of any. This is a helper method which is essentially `flatten(nodeData)`;
+Traverse every node in the tree breadth-first and flatten the tree into a single array. Extract the 'data' property of each Node (if node is not null) and return an array of any. This is a helper method which is essentially `flatten(nodeData)`;
 
 Return: Array<any>
 
 #### `flattenByHeight(?fn)`
 
-Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each height level in the tree.
+Traverse every node in the tree breadth-first and flatten the tree into an array of arrays, where each array is for each height level in the tree.
 
 Return: Array<Array<any>>
 
@@ -574,7 +574,7 @@ tree.flattenByHeight(nodeData);
 
 #### `flattenDataByHeight()`
 
-Traverse every node in the tree breath first and flatten the tree into an array of arrays, where each array is for each height level in the tree. Extract the 'data' property of each Node (if node is not null). This is a helper method which is essentially `flattenByHeight(nodeData)`;
+Traverse every node in the tree breadth-first and flatten the tree into an array of arrays, where each array is for each height level in the tree. Extract the 'data' property of each Node (if node is not null). This is a helper method which is essentially `flattenByHeight(nodeData)`;
 
 Return: Array<Array<any>>
 
@@ -746,7 +746,7 @@ Return: Number
 
 #### `flattenByHeight(?fn)`
 
-Traverse node and its children breath first and flatten into an array of arrays, where each array is for each height level (with this node at height 0).
+Traverse node and its children breadth-first and flatten into an array of arrays, where each array is for each height level (with this node at height 0).
 
 Return: Array<Array<any>>
 
