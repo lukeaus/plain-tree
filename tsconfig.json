@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "module": "es2015",
     "lib": ["es2017", "dom"],
     "types": ["jest"],
     "strict": true,
     "strictNullChecks": false,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "ignoreDeprecations": "6.0"
+    "moduleResolution": "bundler",
+    "esModuleInterop": true
   },
   "include": ["src", "tests"]
 }

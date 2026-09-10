@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "es5",
+    "ignoreDeprecations": "6.0",
     "noEmit": false,
     "declaration": true,
     "outDir": "build",
