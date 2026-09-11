@@ -63,7 +63,7 @@
     "@semantic-release/release-notes-generator": "14.1.1",
     "@types/jest": "30.0.0",
     "@typescript-eslint/eslint-plugin": "8.65.0",
-    "@typescript-eslint/parser": "8.69.0",
+    "@typescript-eslint/parser": "8.70.0",
     "@typescript/native": "npm:typescript@7.0.2",
     "eslint": "10.10.0",
     "husky": "9.1.7",
